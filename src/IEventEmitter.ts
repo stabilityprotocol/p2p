@@ -1,22 +1,22 @@
 export interface Listener<T> {
-  (event: T): any
+  (event: T, payload: string): any
 }
 
 export interface Disposable {
   dispose: () => void
 }
 
-export interface IEventEmitter<T extends string, K> {
-  listeners: { [key in T]?: Listener<K>[] }
-  listenersOncer: { [key in T]?: Listener<K>[] }
+export interface IEventEmitter<T extends string> {
+  listeners: { [key in T]?: Listener<T>[] }
+  listenersOncer: { [key in T]?: Listener<T>[] }
 
-  on: (topic: T, listener: Listener<K>) => Disposable
+  on: (topic: T, listener: Listener<T>) => Disposable
 
-  once: (topic: T, listener: Listener<K>) => void
+  once: (topic: T, listener: Listener<T>) => void
 
-  off: (topic: T, listener: Listener<K>) => void
+  off: (topic: T, listener: Listener<T>) => void
 
-  emit: (topic: T, event: K) => void
+  emit: (topic: T, event: T) => void
 
-  pipe: (topic: T, te: IEventEmitter<T, K>) => Disposable
+  pipe: (topic: T, te: IEventEmitter<T>) => Disposable
 }

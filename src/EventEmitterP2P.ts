@@ -1,26 +1,28 @@
-import { Libp2p } from 'libp2p'
+import LibP2P, { Libp2p } from 'libp2p'
 import { Disposable, IEventEmitter, Listener } from './IEventEmitter'
 import { getNode } from './node'
 import { fromString as uint8ArrayFromString } from 'uint8arrays'
 
-export default class TypedEvent<T extends string, K> implements IEventEmitter<T, K> {
-  private p2pnode!: Libp2p
+type P2POptions = { overridedOptions: LibP2P.Libp2pOptions; bootstrapList?: string[] }
 
-  listeners: { [key in T]?: Listener<K>[] } = {}
-  listenersOncer: { [key in T]?: Listener<K>[] } = {}
+export default class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
+  p2pnode!: Libp2p
 
-  constructor() {
-    this.initialize()
+  listeners: { [key in T]?: Listener<T>[] } = {}
+  listenersOncer: { [key in T]?: Listener<T>[] } = {}
+
+  constructor(p2pOpt?: P2POptions) {
+    this.initialize(p2pOpt)
   }
 
-  private async initialize() {
-    this.p2pnode = await getNode().then((node) => {
-      node.pubsub.addEventListener('message', this._onMessage)
+  private async initialize(p2pOpt?: P2POptions) {
+    this.p2pnode = await getNode(p2pOpt?.overridedOptions, p2pOpt?.bootstrapList).then((node) => {
+      node.pubsub.addEventListener('message', this._onMessage.bind(this))
       return node
     })
   }
 
-  on = (topic: T, listener: Listener<K>): Disposable => {
+  on = (topic: T, listener: Listener<T>): Disposable => {
     if (!this.listeners[topic]) {
       this.listeners[topic] = []
     }
@@ -31,20 +33,20 @@ export default class TypedEvent<T extends string, K> implements IEventEmitter<T,
     }
   }
 
-  once = (topic: T, listener: Listener<K>): void => {
+  once = (topic: T, listener: Listener<T>): void => {
     if (!this.listenersOncer[topic]) {
       this.listenersOncer[topic] = []
     }
     this.listenersOncer[topic]!.push(listener)
   }
 
-  off = (topic: T, listener: Listener<K>): void => {
+  off = (topic: T, listener: Listener<T>): void => {
     if (!this.listeners[topic]) return
     var callbackIndex = this.listeners[topic]!.indexOf(listener)
     if (callbackIndex > -1) this.listeners[topic]!.splice(callbackIndex, 1)
   }
 
-  emit = (topic: T, event: K) => {
+  emit = async (topic: T, event: any) => {
     if (!this.p2pnode) {
       throw new Error('P2P node not initialized')
     }
@@ -52,7 +54,7 @@ export default class TypedEvent<T extends string, K> implements IEventEmitter<T,
     this.p2pnode.pubsub.publish(topic, data)
   }
 
-  pipe = (topic: T, te: IEventEmitter<T, K>): Disposable => {
+  pipe = (topic: T, te: IEventEmitter<T>): Disposable => {
     return this.on(topic, (e) => te.emit(topic, e))
   }
 
@@ -60,25 +62,27 @@ export default class TypedEvent<T extends string, K> implements IEventEmitter<T,
     if (!this.p2pnode) {
       throw new Error('P2P node not initialized')
     }
-    this.p2pnode.pubsub.subscribe(topic)
+    const currentTopics = this.p2pnode.pubsub.getTopics()
+    if (!currentTopics.includes(topic)) {
+      this.p2pnode.pubsub.subscribe(topic)
+    }
   }
 
   _onMessage = (msg: any) => {
     try {
-      const topic = msg.topic as T
-      const data = JSON.parse(msg.data) as K
-      if (!this.listeners[topic]) {
-        this.listeners[topic]!.forEach((listener) => listener(data))
+      const topic = msg.detail.topic as T
+      const data = msg.detail.data.toString()
+      if (this.listeners[topic]) {
+        ;(this.listeners[topic] ?? []).forEach((listener) => listener(topic, data))
       }
 
-      if (this.listenersOncer[topic] && this.listenersOncer[topic]!.length > 0) {
-        const toCall = this.listenersOncer[topic]
-        if (!toCall) return
+      if (this.listenersOncer[topic]) {
+        const toCall = this.listenersOncer[topic] ?? []
         this.listenersOncer[topic] = []
-        toCall.forEach((listener) => listener(data))
+        toCall.forEach((listener) => listener(topic, data))
       }
     } catch (e) {
-      console.log(e)
+      console.error('🚀 ~ file: EventEmitterP2P.ts:87 ~ EventEmitterP2P<T ~ e:', e)
     }
   }
 }
