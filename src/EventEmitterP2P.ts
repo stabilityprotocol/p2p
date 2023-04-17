@@ -3,7 +3,7 @@ import { Disposable, IEventEmitter, Listener } from './IEventEmitter'
 import { getNode } from './node'
 import { fromString as uint8ArrayFromString } from 'uint8arrays'
 
-export class TypedEvent<T extends string, K> implements IEventEmitter<T, K> {
+export default class TypedEvent<T extends string, K> implements IEventEmitter<T, K> {
   private p2pnode!: Libp2p
 
   listeners: { [key in T]?: Listener<K>[] } = {}

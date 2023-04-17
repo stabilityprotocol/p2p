@@ -23,3 +23,7 @@ export const getNode = (overridedOptions: LibP2P.Libp2pOptions = {}, bootstrapLi
     ...overridedOptions
   })
 }
+
+export default {
+  getNode
+}
