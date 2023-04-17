@@ -4,6 +4,7 @@ export default {
   testEnvironment: 'node',
   testPathIgnorePatterns: ['/node_modules/'],
   moduleDirectories: ["node_modules", "src"],
+  testRegex: "/.*\\.test\\.ts$",
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',

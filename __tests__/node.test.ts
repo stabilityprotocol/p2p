@@ -1,3 +1,4 @@
+import { pEvent } from 'p-event'
 import { getNode } from '../src/node.js'
 
 describe('node', () => {
@@ -22,5 +23,15 @@ describe('node', () => {
       await node0.dial(addr)
     }
     expect((await node0.peerStore.all()).length).toBe(1)
+  })
+
+  describe('with bootstrap list', () => {
+    it('should connect to the node0 aka bootstrap node', async () => {
+      const node0 = await getNode()
+      const nodes = node0.getMultiaddrs().map((addr) => addr.toString())
+      const node1 = await getNode({}, nodes)
+      await pEvent(node1, 'peer:discovery')
+      expect((await node1.peerStore.all()).length).toBe(1)
+    })
   })
 })

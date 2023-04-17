@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import EventEmitterP2P from '../src/EventEmitterP2P.js'
 import { pEvent } from 'p-event'
+import { wait } from './utils.js'
 import type { Message, SubscriptionChangeData } from '@libp2p/interface-pubsub'
 
 enum TestTopic {
@@ -140,9 +141,3 @@ describe('EventEmitterP2P', () => {
     })
   })
 })
-
-function wait(time = 1000) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time)
-  })
-}
