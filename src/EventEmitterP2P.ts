@@ -37,6 +37,7 @@ export default class EventEmitterP2P<T extends string> implements IEventEmitter<
     if (!this.listenersOncer[topic]) {
       this.listenersOncer[topic] = []
     }
+    this._subscribe(topic)
     this.listenersOncer[topic]!.push(listener)
   }
 
