@@ -1,7 +1,8 @@
 {
-  "name": "p2p",
+  "name": "@stabilityprotocol/p2p",
   "version": "1.0.0",
   "source": "src/index.ts",
+  "main": "dist/p2p.js",
   "repository": "git@github.com:stabilityprotocol/p2p.git",
   "author": "info@stabilityprotocol.com",
   "license": "MIT",

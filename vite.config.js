@@ -11,8 +11,8 @@ export default defineConfig({
         target: 'es2020',
         lib: {
             entry: resolve(__dirname, 'src/index.ts'),
-            name: 'EventEmitterP2P',
-            fileName: 'stble-p2p',
+            name: 'p2p',
+            // fileName: 'stble-p2p',
         },
         sourcemap: true,
     },
