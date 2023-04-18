@@ -1,7 +1,6 @@
 import { jest } from '@jest/globals'
-import EventEmitterP2P from '../src/EventEmitterP2P.js'
+import { EventEmitterP2P } from '../src/EventEmitterP2P.js'
 import { pEvent } from 'p-event'
-import { wait } from './utils.js'
 import type { Message, SubscriptionChangeData } from '@libp2p/interface-pubsub'
 
 enum TestTopic {
@@ -17,7 +16,7 @@ describe('EventEmitterP2P', () => {
 
   it('should initialize the p2pnode', async () => {
     const emitter = new EventEmitterP2P()
-    await wait()
+    await emitter.initialize()
     expect(emitter.p2pnode).toBeDefined()
   })
 
@@ -25,7 +24,7 @@ describe('EventEmitterP2P', () => {
     let ev: EventEmitterP2P<TestTopic>
     beforeEach(async () => {
       ev = new EventEmitterP2P()
-      await wait(100)
+      await ev.initialize()
     })
 
     it('should be able to subscribe to a topic', async () => {
@@ -54,7 +53,7 @@ describe('EventEmitterP2P', () => {
     beforeEach(async () => {
       ev0 = new EventEmitterP2P()
       ev1 = new EventEmitterP2P()
-      await wait(50)
+      await Promise.all([ev0.initialize(), ev1.initialize()])
       for (const addr of ev1.p2pnode.getMultiaddrs()) {
         await ev0.p2pnode.dial(addr)
       }

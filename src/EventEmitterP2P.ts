@@ -5,17 +5,19 @@ import { fromString as uint8ArrayFromString } from 'uint8arrays'
 
 type P2POptions = { overridedOptions: LibP2P.Libp2pOptions; bootstrapList?: string[] }
 
-export default class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
+export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
   p2pnode!: Libp2p
 
   listeners: { [key in T]?: Listener<T>[] } = {}
   listenersOncer: { [key in T]?: Listener<T>[] } = {}
 
-  constructor(p2pOpt?: P2POptions) {
-    this.initialize(p2pOpt)
+  public static async build(p2pOpt?: P2POptions): Promise<EventEmitterP2P<string>> {
+    const emitter = new EventEmitterP2P()
+    await emitter.initialize(p2pOpt)
+    return emitter
   }
 
-  private async initialize(p2pOpt?: P2POptions) {
+  async initialize(p2pOpt?: P2POptions) {
     this.p2pnode = await getNode(p2pOpt?.overridedOptions, p2pOpt?.bootstrapList).then((node) => {
       node.pubsub.addEventListener('message', this._onMessage.bind(this))
       return node
