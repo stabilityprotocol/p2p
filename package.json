@@ -10,16 +10,20 @@
   "scripts": {
     "build": "vite build",
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest --detectOpenHandles --forceExit",
-    "test:dev": "node --experimental-vm-modules ./node_modules/.bin/jest --detectOpenHandles --forceExit --watch",
-    "example": "vite"
+    "test:dev": "node --experimental-vm-modules ./node_modules/.bin/jest --detectOpenHandles --forceExit --watch"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.5.1",
     "@commitlint/config-conventional": "^17.4.4",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@types/events": "^3.0.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.11",
+    "events": "^3.3.0",
     "jest": "^29.5.0",
     "p-event": "^5.0.1",
+    "rollup-plugin-node-polyfills": "^0.2.1",
     "ts-jest": "^29.1.0",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4",
