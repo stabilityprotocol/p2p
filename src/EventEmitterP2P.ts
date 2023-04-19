@@ -1,8 +1,8 @@
 import LibP2P, { Libp2p } from 'libp2p'
-import { Disposable, IEventEmitter, Listener } from './IEventEmitter'
-import { getNode } from './node'
+import { Disposable, IEventEmitter, Listener } from './IEventEmitter.js'
+import { getNode } from './node.js'
 import { fromString as uint8ArrayFromString } from 'uint8arrays'
-import { error, info } from './logger'
+import { error, info } from './logger.js'
 
 type P2POptions = { overridedOptions: LibP2P.Libp2pOptions; bootstrapList?: string[] }
 

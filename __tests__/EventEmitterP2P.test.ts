@@ -1,7 +1,6 @@
 import { jest } from '@jest/globals'
 import { EventEmitterP2P } from '../src/EventEmitterP2P.js'
 import { pEvent } from 'p-event'
-import type { Message, SubscriptionChangeData } from '@libp2p/interface-pubsub'
 
 enum TestTopic {
   TEST = 'TEST',
@@ -65,20 +64,14 @@ describe('EventEmitterP2P', () => {
 
       // await subscription change
       await Promise.all([
-        pEvent<'subscription-change', CustomEvent<SubscriptionChangeData>>(
-          ev0.p2pnode.pubsub,
-          'subscription-change'
-        ),
-        pEvent<'subscription-change', CustomEvent<SubscriptionChangeData>>(
-          ev1.p2pnode.pubsub,
-          'subscription-change'
-        )
+        pEvent(ev0.p2pnode.pubsub, 'subscription-change'),
+        pEvent(ev1.p2pnode.pubsub, 'subscription-change')
       ])
 
       expect(ev1.listeners[TestTopic.TEST]).toBeDefined()
 
       // we have to wait for this event to be emitted
-      const promise = pEvent<'message', CustomEvent<Message>>(ev1.p2pnode.pubsub, 'message')
+      const promise = pEvent<'message', any>(ev1.p2pnode.pubsub, 'message')
       await ev0.emit(TestTopic.TEST, 'test')
       await promise
 
@@ -91,20 +84,14 @@ describe('EventEmitterP2P', () => {
 
       // await subscription change
       await Promise.all([
-        pEvent<'subscription-change', CustomEvent<SubscriptionChangeData>>(
-          ev0.p2pnode.pubsub,
-          'subscription-change'
-        ),
-        pEvent<'subscription-change', CustomEvent<SubscriptionChangeData>>(
-          ev1.p2pnode.pubsub,
-          'subscription-change'
-        )
+        pEvent(ev0.p2pnode.pubsub, 'subscription-change'),
+        pEvent(ev1.p2pnode.pubsub, 'subscription-change')
       ])
 
       expect(ev1.listenersOncer[TestTopic.TEST]).toBeDefined()
 
       // we have to wait for this event to be emitted
-      const promise = pEvent<'message', CustomEvent<Message>>(ev1.p2pnode.pubsub, 'message')
+      const promise = pEvent<'message', any>(ev1.p2pnode.pubsub, 'message')
       await ev0.emit(TestTopic.TEST, 'test')
       await promise
 
@@ -118,20 +105,14 @@ describe('EventEmitterP2P', () => {
 
       // await subscription change
       await Promise.all([
-        pEvent<'subscription-change', CustomEvent<SubscriptionChangeData>>(
-          ev0.p2pnode.pubsub,
-          'subscription-change'
-        ),
-        pEvent<'subscription-change', CustomEvent<SubscriptionChangeData>>(
-          ev1.p2pnode.pubsub,
-          'subscription-change'
-        )
+        pEvent(ev0.p2pnode.pubsub, 'subscription-change'),
+        pEvent(ev1.p2pnode.pubsub, 'subscription-change')
       ])
 
       expect(ev0.listenersOncer[TestTopic.TEST]).toBeDefined()
 
       // we have to wait for this event to be emitted
-      const promise = pEvent<'message', CustomEvent<Message>>(ev0.p2pnode.pubsub, 'message')
+      const promise = pEvent<'message', any>(ev0.p2pnode.pubsub, 'message')
       await ev1.emit(TestTopic.TEST, 'test')
       await promise
 
