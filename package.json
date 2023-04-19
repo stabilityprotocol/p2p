@@ -1,6 +1,6 @@
 {
   "name": "@stabilityprotocol/p2p",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "source": "src/index.ts",
   "main": "dist/p2p.js",
   "types": "dist/index.d.ts",
