@@ -11,8 +11,8 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
   listeners: { [key in T]?: Listener<T>[] } = {}
   listenersOncer: { [key in T]?: Listener<T>[] } = {}
 
-  public static async build(p2pOpt?: P2POptions): Promise<EventEmitterP2P<string>> {
-    const emitter = new EventEmitterP2P()
+  public static async build<T extends string>(p2pOpt?: P2POptions): Promise<EventEmitterP2P<T>> {
+    const emitter = new EventEmitterP2P<T>()
     await emitter.initialize(p2pOpt)
     return emitter
   }
