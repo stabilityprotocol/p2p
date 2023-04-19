@@ -15,7 +15,7 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@stabilityprotocol'
       - name: Install dependencies 🏗️
-        run: yarn isntall --frozen-lockfile
+        run: yarn install --frozen-lockfile
       - name: Build package 👷‍♀️
         run: yarn build
       - name: Publish package 📦
