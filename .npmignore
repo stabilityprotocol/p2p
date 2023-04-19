@@ -105,3 +105,5 @@ typings/
 build
 
 .parcel-cache
+
+.github
