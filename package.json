@@ -3,6 +3,7 @@
   "version": "1.0.4",
   "source": "src/index.ts",
   "main": "dist/p2p.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:stabilityprotocol/p2p.git",
   "author": "info@stabilityprotocol.com",
   "license": "MIT",
