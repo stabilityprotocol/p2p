@@ -1,3 +1,3 @@
-export * from './EventEmitterP2P'
-export * from './node'
-export * from './IEventEmitter'
+export * from './EventEmitterP2P.js'
+export * from './node.js'
+export * from './IEventEmitter.js'
