@@ -2,6 +2,7 @@ import LibP2P, { Libp2p } from 'libp2p'
 import { Disposable, IEventEmitter, Listener } from './IEventEmitter'
 import { getNode } from './node'
 import { fromString as uint8ArrayFromString } from 'uint8arrays'
+import { error, info } from './logger'
 
 type P2POptions = { overridedOptions: LibP2P.Libp2pOptions; bootstrapList?: string[] }
 
@@ -20,6 +21,7 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
   async initialize(p2pOpt?: P2POptions) {
     this.p2pnode = await getNode(p2pOpt?.overridedOptions, p2pOpt?.bootstrapList).then((node) => {
       node.pubsub.addEventListener('message', this._onMessage.bind(this))
+      info('P2P node initialized')
       return node
     })
   }
@@ -51,10 +53,12 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
 
   emit = async (topic: T, event: any) => {
     if (!this.p2pnode) {
+      error('P2P node not initialized')
       throw new Error('P2P node not initialized')
     }
     const data = uint8ArrayFromString(JSON.stringify(event))
-    this.p2pnode.pubsub.publish(topic, data)
+    info('Publishing message on topic %s: %s', topic, JSON.stringify(event))
+    return this.p2pnode.pubsub.publish(topic, data)
   }
 
   pipe = (topic: T, te: IEventEmitter<T>): Disposable => {
@@ -63,6 +67,7 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
 
   _subscribe = (topic: string) => {
     if (!this.p2pnode) {
+      error('P2P node not initialized')
       throw new Error('P2P node not initialized')
     }
     const currentTopics = this.p2pnode.pubsub.getTopics()
@@ -75,6 +80,7 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
     try {
       const topic = msg.detail.topic as T
       const data = msg.detail.data.toString()
+      info('Received message on topic %s: %s', topic, data)
       if (this.listeners[topic]) {
         ;(this.listeners[topic] ?? []).forEach((listener) => listener(topic, data))
       }
@@ -85,7 +91,7 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
         toCall.forEach((listener) => listener(topic, data))
       }
     } catch (e) {
-      console.error('🚀 ~ file: EventEmitterP2P.ts:87 ~ EventEmitterP2P<T ~ e:', e)
+      error('%O', e)
     }
   }
 }

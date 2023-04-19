@@ -22,6 +22,13 @@ ev.emit('test', 'test-1')
 
 For further information, check it's [EventEmitter interface](src/IEventEmitter.ts)
 
+For printing the debugging logs, the `DEBUG=p2p:*` env flag is required.
+
+```sh
+$ DEBUG=p2p:* node index.js
+$ DEBUG=p2p:* yarn test # to see an example of the outputs
+```
+
 ## License
 
 This library is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
