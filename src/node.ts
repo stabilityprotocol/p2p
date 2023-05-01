@@ -1,6 +1,5 @@
 import * as LibP2P from 'libp2p'
 import { webSockets } from '@libp2p/websockets'
-import { webRTCStar } from '@libp2p/webrtc-star'
 import { mplex } from '@libp2p/mplex'
 import { noise } from '@chainsafe/libp2p-noise'
 import { bootstrap } from '@libp2p/bootstrap'
@@ -11,7 +10,7 @@ import { pubsubPeerDiscovery } from '@libp2p/pubsub-peer-discovery'
 const topics = ['__stability__._peer-discovery._p2p._pubsub']
 
 export const defaultOptions: LibP2P.Libp2pOptions = {
-  transports: [webSockets(), webRTCStar().transport],
+  transports: [webSockets()],
   streamMuxers: [mplex()],
   connectionEncryption: [noise()],
   peerDiscovery: [pubsubPeerDiscovery({ topics })],

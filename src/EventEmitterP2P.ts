@@ -1,7 +1,7 @@
 import LibP2P, { Libp2p } from 'libp2p'
 import { Disposable, IEventEmitter, Listener } from './IEventEmitter.js'
 import { getNode } from './node.js'
-import { fromString as uint8ArrayFromString } from 'uint8arrays'
+import { fromString as uint8ArrayFromString, toString as uint8ArrayToString } from 'uint8arrays'
 import { error, info } from './logger.js'
 
 type P2POptions = { overridedOptions: LibP2P.Libp2pOptions; bootstrapList?: string[] }
@@ -79,7 +79,7 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
   _onMessage = (msg: any) => {
     try {
       const topic = msg.detail.topic as T
-      const data = msg.detail.data.toString()
+      const data = uint8ArrayToString(msg.detail.data)
       info('Received message on topic %s: %s', topic, data)
       if (this.listeners[topic]) {
         ;(this.listeners[topic] ?? []).forEach((listener) => listener(topic, data))
