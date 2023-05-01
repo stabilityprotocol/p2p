@@ -5,7 +5,6 @@ import { circuitRelayTransport } from 'libp2p/circuit-relay'
 import { Config } from './Config'
 import { sanitizeMessage } from './Utils'
 import { Message } from './Types'
-import { multiaddr } from '@multiformats/multiaddr'
 
 const p2pParams = {
   overridedOptions: {
@@ -49,7 +48,7 @@ export const initializeNetwork = (emitMessage: (msg: Message) => void) => {
       }
       emitMessage(msg)
       console.log(`Found peer ${from}`)
-      node.p2pnode.dial(multiaddr(evt.detail.multiaddrs[0]))
+      // node.p2pnode.dial(multiaddr(evt.detail.multiaddrs[0]))
     })
 
     node.p2pnode.addEventListener('peer:connect', (evt) => {

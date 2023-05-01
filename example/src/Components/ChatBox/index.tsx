@@ -2,17 +2,28 @@ import { Box, Flex } from '@chakra-ui/react'
 import { Message } from '../../Types'
 import { FunctionalComponent } from 'preact'
 import { formatTime, truncatePeerId } from '../../Utils'
-import { useMemo } from 'preact/hooks'
+import { useEffect, useMemo, useRef } from 'preact/hooks'
 
 export const ChatBox: FunctionalComponent<{ messages: Message[]; peerId: string | undefined }> = ({
   messages,
   peerId
 }) => {
+  const chatBoxRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = () => {
+    chatBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
   return (
     <Flex flexDirection={'column'} flex={1} overflowY="auto">
       {messages.map((msg, idx) => (
         <MessageRow key={idx} {...{ peerId, message: msg }} />
       ))}
+      <div ref={chatBoxRef}></div>
     </Flex>
   )
 }
