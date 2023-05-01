@@ -1,0 +1,31 @@
+{
+  "name": "example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.5.5",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@libp2p/peer-id": "^2.0.3",
+    "@libp2p/websockets": "^6.0.1",
+    "@multiformats/multiaddr": "^12.1.2",
+    "@stabilityprotocol/p2p": "^1.1.2",
+    "framer-motion": "^10.12.4",
+    "libp2p": "^0.44.0",
+    "preact": "^10.13.1",
+    "react-icons": "^4.8.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.5.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.0",
+    "vite-plugin-node-polyfills": "^0.8.1"
+  }
+}
