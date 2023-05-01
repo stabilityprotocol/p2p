@@ -1,5 +1,5 @@
 export interface Listener<T> {
-  (event: T, payload: string): any
+  (event: T, payload: string, metadata: { [key: string]: any; from: string }): any
 }
 
 export interface Disposable {

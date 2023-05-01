@@ -117,7 +117,9 @@ describe('EventEmitterP2P', () => {
       await promise
 
       expect(listener).toBeCalled()
-      expect(listener).toBeCalledWith(TestTopic.TEST, JSON.stringify('test'))
+      expect(listener).toBeCalledWith(TestTopic.TEST, JSON.stringify('test'), {
+        from: ev1.p2pnode.peerId.toString()
+      })
       expect(ev0.listenersOncer[TestTopic.TEST]).toHaveLength(0)
     })
   })

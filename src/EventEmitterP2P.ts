@@ -78,17 +78,18 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
 
   _onMessage = (msg: any) => {
     try {
+      const from = msg.detail.from.toString()
       const topic = msg.detail.topic as T
       const data = uint8ArrayToString(msg.detail.data)
-      info('Received message on topic %s: %s', topic, data)
+      info('Received message from %s on topic %s: %s', from, topic, data)
       if (this.listeners[topic]) {
-        ;(this.listeners[topic] ?? []).forEach((listener) => listener(topic, data))
+        ;(this.listeners[topic] ?? []).forEach((listener) => listener(topic, data, { from }))
       }
 
       if (this.listenersOncer[topic]) {
         const toCall = this.listenersOncer[topic] ?? []
         this.listenersOncer[topic] = []
-        toCall.forEach((listener) => listener(topic, data))
+        toCall.forEach((listener) => listener(topic, data, { from }))
       }
     } catch (e) {
       error('%O', e)
