@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: yarn
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
         run: yarn build
       - name: Setup Pages
