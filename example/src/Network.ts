@@ -42,7 +42,7 @@ export const initializeNetwork = (emitMessage: (msg: Message) => void) => {
       const from = evt.detail.id.toString()
       const msg: Message = {
         timestamp: Date.now(),
-        text: `Found peer ${evt.detail.id}`,
+        text: `Found peer ${from}`,
         type: 'discover',
         from
       }
@@ -52,10 +52,10 @@ export const initializeNetwork = (emitMessage: (msg: Message) => void) => {
     })
 
     node.p2pnode.addEventListener('peer:connect', (evt) => {
-      const from = evt.detail.id.toString()
+      const from = evt.detail.remoteAddr.getPeerId() ?? 'unknown'
       const msg: Message = {
         timestamp: Date.now(),
-        text: `Connected peer ${evt.detail.id}`,
+        text: `Connected peer ${from}`,
         type: 'connected',
         from
       }
