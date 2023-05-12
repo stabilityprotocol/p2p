@@ -1,10 +1,10 @@
-import LibP2P, { Libp2p } from 'libp2p'
+import { Libp2p } from 'libp2p'
 import { Disposable, IEventEmitter, Listener } from './IEventEmitter.js'
 import { getNode } from './node.js'
 import { fromString as uint8ArrayFromString, toString as uint8ArrayToString } from 'uint8arrays'
 import { error, info } from './logger.js'
+import { P2POptions } from "./node.js"
 
-export type P2POptions = { overridedOptions?: LibP2P.Libp2pOptions; bootstrapList?: string[], nodeKey?: string }
 
 export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
   p2pnode!: Libp2p

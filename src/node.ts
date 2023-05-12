@@ -6,9 +6,10 @@ import { bootstrap } from '@libp2p/bootstrap'
 import { kadDHT } from '@libp2p/kad-dht'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { pubsubPeerDiscovery } from '@libp2p/pubsub-peer-discovery'
-import { P2POptions } from "./EventEmitterP2P"
 import { unmarshalPrivateKey } from "@libp2p/crypto/keys";
 import { createFromPrivKey } from "@libp2p/peer-id-factory";
+
+export type P2POptions = { overridedOptions?: LibP2P.Libp2pOptions; bootstrapList?: string[], nodeKey?: string }
 
 const topics = ['__stability__._peer-discovery._p2p._pubsub']
 
