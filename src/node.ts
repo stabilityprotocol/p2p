@@ -6,6 +6,9 @@ import { bootstrap } from '@libp2p/bootstrap'
 import { kadDHT } from '@libp2p/kad-dht'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { pubsubPeerDiscovery } from '@libp2p/pubsub-peer-discovery'
+import { P2POptions } from "./EventEmitterP2P"
+import { unmarshalPrivateKey } from "@libp2p/crypto/keys";
+import { createFromPrivKey } from "@libp2p/peer-id-factory";
 
 const topics = ['__stability__._peer-discovery._p2p._pubsub']
 
@@ -21,14 +24,22 @@ export const defaultOptions: LibP2P.Libp2pOptions = {
   }
 }
 
-export const getNode = (overridedOptions: LibP2P.Libp2pOptions = {}, bootstrapList?: string[]) => {
+export const generatePeerIdFromNodeKey = async (nodeKey: string) => {
+  const nodeKeyBuffer = Buffer.from(nodeKey, 'base64')
+  
+  return createFromPrivKey(await unmarshalPrivateKey(nodeKeyBuffer))
+}
+
+
+export const getNode = async (options?: P2POptions) => {
   return LibP2P.createLibp2p({
     start: true,
     ...defaultOptions,
-    ...(bootstrapList
-      ? { peerDiscovery: [bootstrap({ list: bootstrapList }), pubsubPeerDiscovery()] }
+    peerId: options?.nodeKey ? await generatePeerIdFromNodeKey(options.nodeKey!) : undefined,
+    ...(options?.bootstrapList
+      ? { peerDiscovery: [bootstrap({ list: options.bootstrapList }), pubsubPeerDiscovery()] }
       : {}),
-    ...overridedOptions
+    ...options?.overridedOptions
   })
 }
 

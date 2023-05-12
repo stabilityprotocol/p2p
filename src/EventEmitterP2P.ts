@@ -4,7 +4,7 @@ import { getNode } from './node.js'
 import { fromString as uint8ArrayFromString, toString as uint8ArrayToString } from 'uint8arrays'
 import { error, info } from './logger.js'
 
-type P2POptions = { overridedOptions: LibP2P.Libp2pOptions; bootstrapList?: string[] }
+export type P2POptions = { overridedOptions?: LibP2P.Libp2pOptions; bootstrapList?: string[], nodeKey?: string }
 
 export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
   p2pnode!: Libp2p
@@ -19,7 +19,7 @@ export class EventEmitterP2P<T extends string> implements IEventEmitter<T> {
   }
 
   async initialize(p2pOpt?: P2POptions) {
-    this.p2pnode = await getNode(p2pOpt?.overridedOptions, p2pOpt?.bootstrapList).then((node) => {
+    this.p2pnode = await getNode(p2pOpt).then((node) => {
       node.pubsub.addEventListener('message', this._onMessage.bind(this))
       info('P2P node initialized')
       return node

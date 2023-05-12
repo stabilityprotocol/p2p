@@ -29,9 +29,20 @@ describe('node', () => {
     it('should connect to the node0 aka bootstrap node', async () => {
       const node0 = await getNode()
       const nodes = node0.getMultiaddrs().map((addr) => addr.toString())
-      const node1 = await getNode({}, nodes)
+      const node1 = await getNode({ bootstrapList: nodes })
       await pEvent(node1, 'peer:discovery')
       expect((await node1.peerStore.all()).length).toBe(1)
+    })
+  })
+
+  describe('with nodekey', () => {
+    it('should connect to the node0 aka bootstrap node', async () => {
+      // Example nodeKey, not use in production
+      const nodeKey = "CAESQC/vXes9O4r83WY85P1rhuBxHkfBt/B8m5C1FgLC9oW/8cVXY3TBXJqqxHohhdDtTca/UmXDtvOWqumRjBTp2FQ=";
+
+      const node0 = await getNode({ nodeKey });
+
+      expect(Buffer.from(node0.peerId.publicKey ?? "").toString('base64')).toBe("CAESIPHFV2N0wVyaqsR6IYXQ7U3Gv1Jlw7bzlqrpkYwU6dhU");
     })
   })
 })
